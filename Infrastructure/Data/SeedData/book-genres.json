@@ -1,0 +1,38 @@
+[
+  {
+    "BookId": 1,
+    "GenreId": 8
+  },
+  {
+    "BookId": 2,
+    "GenreId": 8
+  },
+  {
+    "BookId": 2,
+    "GenreId": 19
+  },
+  {
+    "BookId": 3,
+    "GenreId": 8
+  },
+  {
+    "BookId": 4,
+    "GenreId": 8
+  },
+  {
+    "BookId": 4,
+    "GenreId": 9
+  },
+  {
+    "BookId": 5,
+    "GenreId": 21
+  },
+  {
+    "BookId": 6,
+    "GenreId": 8
+  },
+  {
+    "BookId": 7,
+    "GenreId": 8
+  }
+]
