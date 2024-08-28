@@ -1,4 +1,7 @@
-﻿namespace Core.Entities
+﻿using System.Text.Json.Serialization;
+using Core.Entities.Base;
+
+namespace Core.Entities
 {
     public class Book : BaseEntity
     {
@@ -15,9 +18,17 @@
         public required string ISBN { get; set; }
 
         // Relationships
-        public required string Author { get; set; } = string.Empty;
-        public required string Publisher { get; set; } = string.Empty;
-        public required string Language { get; set; } = string.Empty;
-        public required string Genre { get; set; } = string.Empty;
+        [JsonIgnore]
+        public List<BookAuthor>? BookAuthor { get; set; }
+        public List<Author>? Author { get; set; }
+
+        [JsonIgnore]
+        public List<BookGenre>? BookGenre { get; set; }
+        public List<Genre>? Genre { get; set; }
+        public Publisher? Publisher { get; set; }
+        public int PublisherId { get; set; }
+        public Language? Language { get; set; }
+        public int LanguageId { get; set; }
+
     }
 }
