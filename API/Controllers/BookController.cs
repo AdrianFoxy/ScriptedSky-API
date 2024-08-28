@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,25 +8,18 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookController : ControllerBase
+    public class BookController(IBookRepository repo) : ControllerBase
     {
-        private readonly StoreContext context;
-
-        public BookController(StoreContext context)
-        {
-            this.context = context;
-        }
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
+        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks()
         {
-            return await context.Book.ToListAsync();
+            return Ok(await repo.GetBooksAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
-            var book = await context.Book.FindAsync(id);
+            var book = await repo.GetBookByIdAsync(id);
 
             if (book == null) return NotFound();
 
@@ -35,10 +29,14 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> CreateBook(Book book)
         {
-            context.Book.Add(book);
-            await context.SaveChangesAsync();
+            repo.AddBook(book);
 
-            return book;
+            if (await repo.SaveChangesAsync())
+            {
+                return CreatedAtAction("GetBook", new { id = book.Id }, book);
+            }
+
+            return BadRequest("Problem creating book");
         }
 
         [HttpPut("{id:int}")]
@@ -47,29 +45,36 @@ namespace API.Controllers
             if (book.Id != id || !BookExists(id) )
                 return BadRequest("Cannot update book");
 
-            context.Entry(book).State = EntityState.Modified;
+            repo.UpdateBook(book);
 
-            await context.SaveChangesAsync();
+            if (await repo.SaveChangesAsync())
+            {
+                return NoContent();
+            }
 
-            return NoContent();
+            return BadRequest("Problem updating book");
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteBook(int id)
         {
-            var book = await context.Book.FindAsync(id);
+            var book = await repo.GetBookByIdAsync(id);
 
             if(book == null) return NotFound();
 
-            context.Book.Remove(book);
-            await context.SaveChangesAsync();
+            repo.DeleteBook(book);
 
-            return NoContent();
+            if (await repo.SaveChangesAsync())
+            {
+                return NoContent();
+            }
+
+            return BadRequest("Problem deleting book");
         }
 
         private bool BookExists(int id)
         {
-            return context.Book.Any(e => e.Id == id);
+            return repo.BookExists(id);
         }   
     }
 }
