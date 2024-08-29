@@ -10,9 +10,10 @@ namespace API.Controllers
     public class BookController(IGenericRepository<Book> repo) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks(string? title, string? sort, [FromQuery] List<int>? GenreIds)
+        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks(
+            [FromQuery]BookSpecParams bookSpecParams)
         {
-            var spec = new BookFilterSortPaginationSpecification(title, sort, GenreIds);
+            var spec = new BookFilterSortPaginationSpecification(bookSpecParams);
             return Ok(await repo.ListWithSpecAsync(spec));
         }
 
