@@ -4,9 +4,16 @@ namespace Core.Specificatios
 {
     public class BookFilterSortPaginationSpecification : BaseSpecification<Book>
     {
-        public BookFilterSortPaginationSpecification(string? title, string? sort, List<int>? GenreIds) : base(p =>
-             (string.IsNullOrEmpty(title) || p.Title.ToLower().Contains(title)) &&
-             (GenreIds == null || GenreIds.Count == 0 || p.Genre!.Any(x => GenreIds.Contains(x.Id)))
+        public BookFilterSortPaginationSpecification(BookSpecParams bookSpecParams) : base(p =>
+            (string.IsNullOrEmpty(bookSpecParams.Search) || p.Title.ToLower().Contains(bookSpecParams.Search)) &&
+            (bookSpecParams.GenreIds == null || bookSpecParams.GenreIds.Count == 0 || 
+                           p.Genre!.Any(x => bookSpecParams.GenreIds.Contains(x.Id))) &&
+            (bookSpecParams.AuthorIds == null || bookSpecParams.AuthorIds.Count == 0 || 
+                           p.Author!.Any(x => bookSpecParams.AuthorIds.Contains(x.Id))) &&
+            (bookSpecParams.PublisherIds == null || bookSpecParams.PublisherIds.Count == 0 || 
+                           bookSpecParams.PublisherIds.Contains(p.PublisherId)) &&
+            (bookSpecParams.LanguageIds == null || bookSpecParams.LanguageIds.Count == 0 ||
+                           bookSpecParams.LanguageIds.Contains(p.LanguageId))
         )
         {
             AddInclude(p => p.Author!);
@@ -14,7 +21,7 @@ namespace Core.Specificatios
             AddInclude(p => p.Publisher!);
             AddInclude(p => p.Language!);
 
-            switch (sort)
+            switch (bookSpecParams.Sort)
             {
                 case "priceAsc":
                     AddOrderBy(p => p.Price);
