@@ -6,18 +6,18 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookController(IBookRepository repo) : ControllerBase
+    public class BookController(IGenericRepository<Book> repo) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks()
         {
-            return Ok(await repo.GetBooksAsync());
+            return Ok(await repo.ListAllAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
-            var book = await repo.GetBookByIdAsync(id);
+            var book = await repo.GetByIdAsync(id);
 
             if (book == null) return NotFound();
 
@@ -27,9 +27,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> CreateBook(Book book)
         {
-            repo.AddBook(book);
+            repo.Add(book);
 
-            if (await repo.SaveChangesAsync())
+            if (await repo.SaveAllAsync())
             {
                 return CreatedAtAction("GetBook", new { id = book.Id }, book);
             }
@@ -43,9 +43,9 @@ namespace API.Controllers
             if (book.Id != id || !BookExists(id) )
                 return BadRequest("Cannot update book");
 
-            repo.UpdateBook(book);
+            repo.Update(book);
 
-            if (await repo.SaveChangesAsync())
+            if (await repo.SaveAllAsync())
             {
                 return NoContent();
             }
@@ -56,13 +56,13 @@ namespace API.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteBook(int id)
         {
-            var book = await repo.GetBookByIdAsync(id);
+            var book = await repo.GetByIdAsync(id);
 
             if(book == null) return NotFound();
 
-            repo.DeleteBook(book);
+            repo.Delete(book);
 
-            if (await repo.SaveChangesAsync())
+            if (await repo.SaveAllAsync())
             {
                 return NoContent();
             }
@@ -72,7 +72,7 @@ namespace API.Controllers
 
         private bool BookExists(int id)
         {
-            return repo.BookExists(id);
+            return repo.Exists(id);
         }   
     }
 }
