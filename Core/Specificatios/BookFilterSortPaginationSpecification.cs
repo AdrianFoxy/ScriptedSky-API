@@ -21,6 +21,8 @@ namespace Core.Specificatios
             AddInclude(p => p.Publisher!);
             AddInclude(p => p.Language!);
 
+            ApplyPaging(bookSpecParams.PageSize * (bookSpecParams.PageIndex - 1),  bookSpecParams.PageSize);
+
             switch (bookSpecParams.Sort)
             {
                 case "priceAsc":

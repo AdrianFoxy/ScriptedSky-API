@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using API.RequestHelpers;
+using Core.Entities;
 using Core.Interfaces;
 using Core.Specificatios;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,14 @@ namespace API.Controllers
             [FromQuery]BookSpecParams bookSpecParams)
         {
             var spec = new BookFilterSortPaginationSpecification(bookSpecParams);
-            return Ok(await repo.ListWithSpecAsync(spec));
+
+            var books = await repo.ListWithSpecAsync(spec);
+            var count = await repo.CountAsync(spec);
+
+            var pagination = new Pagination<Book>(bookSpecParams.PageIndex, 
+                bookSpecParams.PageSize, count, books);
+
+            return Ok(pagination);
         }
 
         [HttpGet("{id:int}")]
