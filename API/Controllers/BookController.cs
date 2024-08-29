@@ -1,14 +1,11 @@
-﻿using API.RequestHelpers;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Interfaces;
 using Core.Specificatios;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BookController(IGenericRepository<Book> repo) : ControllerBase
+    public class BookController(IGenericRepository<Book> repo) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks(
@@ -16,13 +13,7 @@ namespace API.Controllers
         {
             var spec = new BookFilterSortPaginationSpecification(bookSpecParams);
 
-            var books = await repo.ListWithSpecAsync(spec);
-            var count = await repo.CountAsync(spec);
-
-            var pagination = new Pagination<Book>(bookSpecParams.PageIndex, 
-                bookSpecParams.PageSize, count, books);
-
-            return Ok(pagination);
+            return await CreatePagedResult(repo, spec, bookSpecParams.PageIndex, bookSpecParams.PageSize);
         }
 
         [HttpGet("{id:int}")]
