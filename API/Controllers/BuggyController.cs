@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using API.Dtos;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -30,7 +31,7 @@ namespace API.Controllers
         }
 
         [HttpPost("validationerror")]
-        public IActionResult GetValidationError(Genre genre)
+        public IActionResult GetValidationError(CreateGenreDto genre)
         {
             return Ok();
         }
