@@ -1,19 +1,22 @@
-﻿using Core.Entities;
+﻿using API.Dtos;
+using AutoMapper;
+using Core.Entities;
 using Core.Interfaces;
 using Core.Specificatios;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class BookController(IGenericRepository<Book> repo) : BaseApiController
+    public class BookController(IGenericRepository<Book> repo, IMapper mapper) : BaseApiController
     {
+
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<Book>>> GetBooks(
-            [FromQuery]BookSpecParams bookSpecParams)
+        public async Task<ActionResult<IReadOnlyList<StoreBookDto>>> GetBooks(
+            [FromQuery] BookSpecParams bookSpecParams)
         {
             var spec = new BookFilterSortPaginationSpecification(bookSpecParams);
 
-            return await CreatePagedResult(repo, spec, bookSpecParams.PageIndex, bookSpecParams.PageSize);
+            return await CreatePagedResult<Book, StoreBookDto>(repo, spec, bookSpecParams.PageIndex, bookSpecParams.PageSize, mapper);
         }
 
         [HttpGet("{id:int}")]

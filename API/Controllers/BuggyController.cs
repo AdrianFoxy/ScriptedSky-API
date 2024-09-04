@@ -1,5 +1,4 @@
 ﻿using API.Dtos;
-using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
