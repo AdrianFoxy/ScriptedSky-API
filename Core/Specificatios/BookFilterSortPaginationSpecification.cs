@@ -36,5 +36,13 @@ namespace Core.Specificatios
                     break;
             }
         }
+
+        public BookFilterSortPaginationSpecification(int id) : base(x => x.Id == id)
+        {
+            AddInclude(p => p.Author!);
+            AddInclude(p => p.Genre!);
+            AddInclude(p => p.Publisher!);
+            AddInclude(p => p.Language!);
+        }
     }
 }

@@ -20,13 +20,16 @@ namespace API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Book>> GetBook(int id)
+        public async Task<ActionResult<StoreBookDto>> GetBook(int id)
         {
-            var book = await repo.GetByIdAsync(id);
+            var spec = new BookFilterSortPaginationSpecification(id);
+            var book = await repo.GetEntityWithSpec(spec);
 
             if (book == null) return NotFound();
 
-            return book;
+            var result = mapper.Map<Book, StoreBookDto>(book);
+
+            return result;
         }
 
         [HttpPost]
