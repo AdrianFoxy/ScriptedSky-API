@@ -14,6 +14,7 @@ namespace Infrastructure.Data
         public DbSet<Genre> Genre { get; set; }
         public DbSet<Publisher> Publisher { get; set; }
         public DbSet<Language> Language { get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethod { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -23,6 +24,7 @@ namespace Infrastructure.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GenreConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PublisherConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(LanguageConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DeliveryMethodConfiguration).Assembly);
 
             // Many-to-Many Entity
             modelBuilder.Entity<Book>()

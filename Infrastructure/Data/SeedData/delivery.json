@@ -1,0 +1,23 @@
+[
+  {
+    "ShortName": "Самовивіз",
+    "EnShortName": "Pickup",
+    "Description": "Самовивіз із магазину або пункту видачі.",
+    "EnDescription": "Pickup from store or collection point.",
+    "Price": 0.00
+  },
+  {
+    "ShortName": "Кур'єр",
+    "EnShortName": "Courier",
+    "Description": "Доставка кур'єром за вказаною адресою.",
+    "EnDescription": "Courier delivery to the specified address.",
+    "Price": 200.00
+  },
+  {
+    "ShortName": "Самовивіз з пошти",
+    "EnShortName": "Post Pickup",
+    "Description": "Самовивіз із відділення пошти.",
+    "EnDescription": "Pickup from the post office.",
+    "Price": 150.00
+  }
+]

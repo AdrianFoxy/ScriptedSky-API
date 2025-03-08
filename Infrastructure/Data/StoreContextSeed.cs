@@ -82,6 +82,17 @@ namespace Infrastructure.Data
                 context.BookGenre.AddRange(bookGenres);
                 await context.SaveChangesAsync();
             }
+
+            if (!context.DeliveryMethod.Any())
+            {
+                var delivery = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/delivery.json");
+                var deliveries = JsonSerializer.Deserialize<List<DeliveryMethod>>(delivery);
+
+                if (deliveries == null) return;
+
+                context.DeliveryMethod.AddRange(deliveries);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
